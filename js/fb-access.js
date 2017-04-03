@@ -5,14 +5,13 @@ window.fbAsyncInit = function() {
     version    : 'v2.8'
   });
   FB.getLoginStatus(function(response) {
-if (response.status === 'connected') {
-  console.log('Logged in.');
-  alert("Success");
-}
-else {
-  FB.login();
-}
-});
+    if (response.status === 'connected') {
+      console.log('Logged in.');
+      alert("Success");
+    } else {
+      FB.login();
+    }
+  });
   FB.AppEvents.logPageView();
 };
 
