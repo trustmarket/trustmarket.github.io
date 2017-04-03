@@ -7,9 +7,10 @@ window.fbAsyncInit = function() {
   FB.getLoginStatus(function(response) {
     if (response.status === 'connected') {
       console.log('Logged in.');
-      alert("Success");
+      welcomeMsg();
     } else {
-      FB.login();
+      console.log('Logged in failed...');
+      loginFailedMsg();
     }
   });
   FB.AppEvents.logPageView();
