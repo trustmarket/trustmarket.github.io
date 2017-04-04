@@ -1,39 +1,46 @@
 window.fbAsyncInit = function() {
-  FB.init({
-    appId      : '1899743770243996',
-    xfbml      : true,
-    version    : 'v2.8'
-  });
-  FB.getLoginStatus(function(response) {
-    if (response.status === 'connected') {
-      console.log('Logged in.');
-      welcomeMsg();
-    } else {
-      console.log('Logged in failed...');
-      loginFailedMsg();
-    }
-  });
-  FB.AppEvents.logPageView();
+FB.init({
+  appId      : '1899743770243996',
+  cookie     : true,  // enable cookies to allow the server to access
+                      // the session
+  xfbml      : true,  // parse social plugins on this page
+  version    : 'v2.8' // use graph api version 2.8
+});
+FB.getLoginStatus(function(response) {
+  statusChangeCallback(response);
+});
 };
 
-(function(d, s, id){
-   var js, fjs = d.getElementsByTagName(s)[0];
-   if (d.getElementById(id)) {return;}
-   js = d.createElement(s); js.id = id;
-   js.src = "https://connect.facebook.net/en_US/sdk.js";
-   fjs.parentNode.insertBefore(js, fjs);
- }(document, 'script', 'facebook-jssdk'));
+// Load the SDK asynchronously
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
 
- function welcomeMsg() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-      alert("Yes!!!");
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
-    });
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+}
+
+function statusChangeCallback(response) {
+  console.log('statusChangeCallback');
+  console.log(response);
+  if (response.status === 'connected') {
+    testAPI();
+  } else {
+    document.getElementById('status').innerHTML = 'Please log ' + 'into this app.';
   }
-  function loginFailedMsg() {
+}
+
+function testAPI() {
+  console.log('Welcome!  Fetching your information.... ');
+  FB.api('/me',{fields: 'user_friends'}, function(response) {
+    console.log('Successful login for: ' + response.name);
     document.getElementById('status').innerHTML =
-    'Please try login again later ' + '!';
-   }
+      'Thanks for logging in, ' + response.name + '!'+response.user_friends;
+  });
+}
